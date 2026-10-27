@@ -1,0 +1,364 @@
+/* VARIABLES: colores, espacios y tamaños de letra reutilizados
+   por la tarjeta de asignatura y por el formulario */
+:root {
+  --color-primario: #1a1f6c;
+  --color-acento: #ff5700;
+  --color-secundario: #0796a3;
+  --color-superficie: #ffffff;
+  --color-borde: #d6d1c4;
+  --color-texto-suave: #5b5f6b;
+  --color-etiqueta-fondo: #e3f4f5;
+
+  --espacio-1: 0.5rem;
+  --espacio-2: 1rem;
+  --espacio-3: 1.5rem;
+
+  --texto-sm: 0.875rem;
+  --texto-md: 1rem;
+  --texto-lg: 1.25rem;
+  --texto-xl: 1.6rem;
+
+  --radio: 8px;
+}
+
+/* RESET */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.5;
+  background-color: #fdfdfc;
+}
+
+/* HEADER*/
+header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding:2rem;
+  background-color: #1a1f6c;
+  color: #ffffff;
+  border-bottom: 4px solid #ff5700;
+}
+header h1 {
+  margin:0;
+}
+header p {
+  margin: 0;
+}
+
+/*NAV*/
+nav {
+  display: flex;
+  justify-content:center;
+  gap: 1.5rem;
+  align-items: center;
+  padding:0.5rem;
+  background-color: #ffffff;
+  border-bottom: 1px solid #7e7c7c;
+}
+nav a {
+  color: #1a1f6c;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+nav a:hover {
+  color: #ff5700;
+}
+
+
+
+/* ORGANIZACION MAIN */
+main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Solo la portada (body class="portada") usa la rejilla de dos columnas
+   con la ficha y la foto en la columna lateral */
+.portada main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  grid-template-areas:
+    "intro    ficha"
+    "plan     foto"
+    "admision foto"
+    "noticias foto";
+  align-items: start;
+  gap: 2rem;
+}
+
+#introduccion     { grid-area: intro; }
+#resumen-plan     { grid-area: plan; }
+#resumen-admision { grid-area: admision; }
+#resumen-noticias { grid-area: noticias; }
+main > aside      { grid-area: ficha; }
+#imagen-grado     { grid-area: foto; margin: 0; }
+
+/* La sección del plan vuelve a ser solo texto */
+#resumen-plan h2,
+#resumen-plan p,
+#resumen-plan ul {
+  margin: 0 0 0.8rem;
+}
+
+/* ASIDE */
+aside {
+  padding: 1.5rem;
+  background-color: #ffffff;
+  border: 1px solid #d6d1c4;
+  border-top: 4px solid #0796a3;
+  border-radius: 8px;
+}
+
+aside h2 { margin-top: 0; }
+aside ul { margin-bottom: 0; }
+
+/* TARJETAS */
+article {
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  background-color: #ffffff;
+  border: 1px solid #d6d1c4;
+  border-radius: 8px;
+}
+
+article h3 {
+  margin-top: 0;
+}
+
+
+/* LISTAS Y SECCIONES DE CONTENIDO */
+section ul,
+section ol {
+  padding-left: 1rem;
+}
+
+h2 {
+  color: #1a1f6c;
+  margin-bottom: 0.5rem;
+}
+
+h3 {
+  color:#ff5700;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* IMÁGENES */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 8px;
+}
+
+#imagen-grado img {
+  width: 100%;
+}
+
+/* CURSOS EN MATRIZ */
+.cursos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.curso {
+  padding: 1.25rem;
+  background-color: #ffffff;
+  border: 1px solid #d6d1c4;
+  border-top: 4px solid #0796a3;
+  border-radius: 8px;
+  margin-bottom: 0;
+}
+
+.curso h3 {
+  margin-top: 0;
+  color: #0796a3;
+}
+
+.curso ul {
+  margin-bottom: 0;
+  padding-left: 1.2rem;
+}
+
+
+/* FORMULARIO DE ACCESO */
+form {
+  max-width: 360px;
+  margin: 0 auto;
+  padding: var(--espacio-3);
+  background-color: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+}
+
+form label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-size: var(--texto-md);
+  font-weight: bold;
+}
+
+form input {
+  width: 100%;
+  padding: var(--espacio-1);
+  margin-bottom: var(--espacio-3);
+  font-size: var(--texto-md);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+}
+
+form input:focus {
+  border: 2px solid var(--color-secundario);
+}
+
+form button {
+  width: 100%;
+  padding: var(--espacio-2);
+  font-size: var(--texto-md);
+  background-color: var(--color-acento);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radio);
+  cursor: pointer;
+}
+
+form button:hover {
+  background-color: var(--color-primario);
+}
+
+
+/* TARJETA DE ASIGNATURA */
+.tarjeta {
+  max-width: 42rem;
+  margin: 0 auto var(--espacio-3);
+  padding: var(--espacio-3);
+  background-color: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-top: 4px solid var(--color-acento);
+  border-radius: var(--radio);
+}
+
+.tarjeta__etiquetas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espacio-1);
+  margin: 0;
+}
+
+.etiqueta {
+  padding: 0.15rem var(--espacio-2);
+  font-size: var(--texto-sm);
+  font-weight: bold;
+  color: var(--color-primario);
+  background-color: var(--color-etiqueta-fondo);
+  border: 1px solid var(--color-secundario);
+  border-radius: 999px;
+}
+
+.etiqueta--destacada {
+  color: #ffffff;
+  background-color: var(--color-primario);
+  border-color: var(--color-primario);
+}
+
+.tarjeta h2 {
+  margin: var(--espacio-2) 0 var(--espacio-1);
+  font-size: var(--texto-xl);
+  color: var(--color-primario);
+}
+
+.tarjeta__descripcion {
+  margin: 0 0 var(--espacio-3);
+  font-size: var(--texto-md);
+  line-height: 1.6;
+}
+
+.tarjeta__datos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  gap: var(--espacio-2);
+  margin: 0;
+  padding-top: var(--espacio-2);
+  border-top: 1px solid var(--color-borde);
+}
+
+.tarjeta__datos dt {
+  font-size: var(--texto-sm);
+  color: var(--color-texto-suave);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.tarjeta__datos dd {
+  margin: 0;
+  font-size: var(--texto-lg);
+  font-weight: bold;
+  color: var(--color-primario);
+}
+
+/* FOOTER*/
+footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding:1rem;
+  margin-top: 3rem;
+  background-color: #1a1f6c;
+  color: #f8f7f7;
+  border-top: 4px solid #ff5700;
+  text-align: center;
+}
+footer p {
+  margin: 0;
+}
+footer a {
+  color: #ff5700;
+}
+
+/* BREAKPOINT RESPONSIVE */
+@media (max-width: 768px) {
+
+  /* En móvil la portada pasa a una sola columna */
+  .portada main {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "intro"
+      "ficha"
+      "foto"
+      "plan"
+      "admision"
+      "noticias";
+  }
+
+  .cursos {
+    grid-template-columns: 1fr;
+  }
+
+  nav {
+    flex-direction: column;
+  }
+}
+
+/* PANTALLAS GRANDES: letra algo mayor en tarjeta y formulario */
+@media (min-width: 1200px) {
+  :root {
+    --texto-sm: 0.95rem;
+    --texto-md: 1.1rem;
+    --texto-lg: 1.4rem;
+    --texto-xl: 2rem;
+  }
+
+  .tarjeta {
+    max-width: 48rem;
+  }
+}

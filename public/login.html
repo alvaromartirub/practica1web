@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<!-- Autores: Nombre Apellidos 1, Nombre Apellidos 2 -->
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <script src="exercises.js" defer></script>
+  <title>Acceso al campus virtual — CUNEF Universidad</title>
+</head>
+<body>
+
+  <header>
+    <h1>Acceso al campus virtual</h1>
+    <p>Área privada de estudiantes y profesorado</p>
+  </header>
+
+  <nav>
+    <a href="index.html">Inicio</a>
+    <a href="plan-estudios.html">Plan de estudios</a>
+    <a href="admision.html">Admisión</a>
+    <a href="noticias.html">Noticias</a>
+    <a href="login.html">Acceso</a>
+  </nav>
+
+  <main>
+
+    <section id="acceso">
+      <h2>Introduce tus credenciales</h2>
+      <p>
+        Utiliza tu <strong>cuenta de CUNEF</strong> para acceder al campus virtual.
+      </p>
+
+      <form>
+        <p>
+          <label for="email">Correo electrónico</label>
+          <input type="email" id="email" name="email" placeholder="nombre.apellido@cunef.edu">
+        </p>
+
+        <p>
+          <label for="password">Contraseña</label>
+          <input type="password" id="password" name="password">
+        </p>
+
+        <p>
+          <button type="submit">Sign in</button>
+        </p>
+      </form>
+    </section>
+
+    <section id="ayuda">
+      <h2>¿Problemas para acceder?</h2>
+      <ul>
+        <li>Comprueba que utilizas la terminación <span title="Dominio institucional">@cunef.edu</span></li>
+        <li>La contraseña debe tener un mínimo de <em>ocho</em> caracteres</li>
+        <li>Si has olvidado la contraseña, contacta con el servicio de soporte informático </li>
+      </ul>
+      <p>
+        Si todavía no eres estudiante, revisa primero el
+        <a href="admision.html">proceso de admisión</a>.
+      </p>
+    </section>
+
+  </main>
+
+  <footer>
+    <img src="logo_cunef.png" alt="Logotipo de CUNEF Universidad" width="80" height="80">
+    <p>&copy; 2026 CUNEF Universidad.<br>Laboratorio 01 - Programación de Aplicaciones Web</p>
+    <a href="index.html">Volver al inicio</a>
+    <a href="https://www.cunef.edu/">Web oficial de CUNEF Universidad</a>
+  </footer>
+
+</body>
+</html>
