@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<!-- Autores: Nombre Apellidos 1, Nombre Apellidos 2 -->
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="salidas.css">
+  <script src="salidas.js" defer></script>
+  <title>Salidas profesionales — Grado en Ciencia de Datos e IA — CUNEF Universidad</title>
+</head>
+<body>
+
+  <header>
+    <h1>Salidas profesionales</h1>
+    <p>Grado en Ciencia de Datos e Inteligencia Artificial</p>
+  </header>
+
+  <nav>
+    <a href="index.html">Inicio</a>
+    <a href="plan-estudios.html">Plan de estudios</a>
+    <a href="admision.html">Admisión</a>
+    <a href="noticias.html">Noticias</a>
+    <a href="salidas-profesionales.html">Salidas profesionales</a>
+  </nav>
+
+  <main>
+
+    <section id="introduccion-salidas">
+      <h2>¿A qué puedes dedicarte?</h2>
+      <p>
+        El grado prepara para trabajar con datos y con sistemas inteligentes en cualquier sector.
+        La <a href="https://www.cunef.edu/en/programmes/double-bachelor-artificial-intelligence-data-science/">web
+        oficial de CUNEF Universidad</a> asocia a la titulación nueve perfiles profesionales y
+        cita la estimación de IndesIA de que harán falta más de <strong>90.000 expertos</strong>
+        en Ciencia de Datos e Inteligencia Artificial en los próximos años.
+      </p>
+      <p>
+        Pulsa sobre cada salida para leer una explicación breve y ver con qué asignaturas del
+        <a href="plan-estudios.html#asignaturas">plan de estudios</a> se relaciona.
+      </p>
+    </section>
+
+    <section id="salidas">
+      <div class="acordeon-barra">
+        <h2>Nueve perfiles</h2>
+        <button type="button" id="alternar-todas" class="boton-secundario" hidden>Expandir todas</button>
+      </div>
+
+      <div class="acordeon">
+
+        <div class="acordeon__item">
+          <h3 class="acordeon__titulo">
+            <button type="button" class="acordeon__boton" id="boton-1" aria-expanded="true" aria-controls="panel-1">
+              <span>Ingeniero/a de sistemas inteligentes</span>
+              <span class="acordeon__icono" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="acordeon__panel" id="panel-1" role="region" aria-labelledby="boton-1">
+            <div class="acordeon__contenido">
+              <p>
+                Diseña sistemas que combinan software, datos y modelos de inteligencia artificial para
+                que tomen decisiones o automaticen tareas. Se relaciona con asignaturas como
+                <em>Fundamentos de Programación</em>, <em>Estructuras de Datos y Algoritmos</em> y
+                <em>Desarrollo de la IA e Inteligencia Natural</em>.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="acordeon__item">
+          <h3 class="acordeon__titulo">
+            <button type="button" class="acordeon__boton" id="boton-2" aria-expanded="true" aria-controls="panel-2">
+              <span>Arquitecto/a de datos</span>
+              <span class="acordeon__icono" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="acordeon__panel" id="panel-2" role="region" aria-labelledby="boton-2">
+            <div class="acordeon__contenido">
+              <p>
+                Decide cómo se organizan, almacenan y conectan los datos de una organización para que
+                sean fáciles de usar y crezcan sin problemas. Se relaciona con
+                <em>Bases de Datos</em> y <em>Computación en la Nube</em>.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="acordeon__item">
+          <h3 class="acordeon__titulo">
+            <button type="button" class="acordeon__boton" id="boton-3" aria-expanded="true" aria-controls="panel-3">
+              <span>Ingeniero/a de datos</span>
+              <span class="acordeon__icono" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="acordeon__panel" id="panel-3" role="region" aria-labelledby="boton-3">
+            <div class="acordeon__contenido">
+              <p>
+                Construye y mantiene los procesos que recogen, limpian y mueven los datos desde su
+                origen hasta quienes los analizan. Se relaciona con <em>Bases de Datos</em>,
+                <em>Programación de Aplicaciones Web</em> y <em>Computación en la Nube</em>.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="acordeon__item">
+          <h3 class="acordeon__titulo">
+            <button type="button" class="acordeon__boton" id="boton-4" aria-expanded="true" aria-controls="panel-4">
+              <span>Experto/a en IoT</span>
+              <span class="acordeon__icono" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="acordeon__panel" id="panel-4" role="region" aria-labelledby="boton-4">
+            <div class="acordeon__contenido">
+              <p>
+                Trabaja con dispositivos conectados, como sensores y máquinas, que generan datos en
+                tiempo real y los envían a plataformas donde se procesan. Se relaciona con
+                <em>IoT</em>, <em>Redes y Sistemas Operativos</em> y el Minor in Robotics.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="acordeon__item">
+          <h3 class="acordeon__titulo">
+            <button type="button" class="acordeon__boton" id="boton-5" aria-expanded="true" aria-controls="panel-5">
+              <span>Científico/a de datos</span>
+              <span class="acordeon__icono" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="acordeon__panel" id="panel-5" role="region" aria-labelledby="boton-5">
+            <div class="acordeon__contenido">
+              <p>
+                Analiza grandes volúmenes de información y crea modelos para responder preguntas y
+                hacer predicciones. Se relaciona con <em>Probabilidad y Estadística</em>,
+                <em>Álgebra</em>, <em>Cálculo</em> y <em>Lógica Basada en Datos</em>.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="acordeon__item">
+          <h3 class="acordeon__titulo">
+            <button type="button" class="acordeon__boton" id="boton-6" aria-expanded="true" aria-controls="panel-6">
+              <span>Gobierno del dato</span>
+              <span class="acordeon__icono" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="acordeon__panel" id="panel-6" role="region" aria-labelledby="boton-6">
+            <div class="acordeon__contenido">
+              <p>
+                Define las normas sobre quién puede usar qué datos y cómo, para que se cumplan la
+                legislación y las políticas de la empresa. Se relaciona con
+                <em>Ética y Regulación de la Inteligencia Artificial</em> y <em>Ciberseguridad</em>.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="acordeon__item">
+          <h3 class="acordeon__titulo">
+            <button type="button" class="acordeon__boton" id="boton-7" aria-expanded="true" aria-controls="panel-7">
+              <span>Calidad del dato</span>
+              <span class="acordeon__icono" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="acordeon__panel" id="panel-7" role="region" aria-labelledby="boton-7">
+            <div class="acordeon__contenido">
+              <p>
+                Comprueba que los datos son correctos, completos y coherentes, y corrige los errores
+                antes de que lleguen a los informes o a los modelos. Se relaciona con
+                <em>Bases de Datos</em> y <em>Probabilidad y Estadística</em>.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="acordeon__item">
+          <h3 class="acordeon__titulo">
+            <button type="button" class="acordeon__boton" id="boton-8" aria-expanded="true" aria-controls="panel-8">
+              <span>Analista de datos</span>
+              <span class="acordeon__icono" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="acordeon__panel" id="panel-8" role="region" aria-labelledby="boton-8">
+            <div class="acordeon__contenido">
+              <p>
+                Convierte los datos en informes, gráficos y conclusiones que ayudan a una organización
+                a tomar decisiones. Se relaciona con <em>Visualización de Datos</em>,
+                <em>Probabilidad y Estadística</em> y <em>Bases de Datos</em>.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="acordeon__item">
+          <h3 class="acordeon__titulo">
+            <button type="button" class="acordeon__boton" id="boton-9" aria-expanded="true" aria-controls="panel-9">
+              <span>Transformación digital en la Industria 4.0</span>
+              <span class="acordeon__icono" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="acordeon__panel" id="panel-9" role="region" aria-labelledby="boton-9">
+            <div class="acordeon__contenido">
+              <p>
+                Ayuda a las empresas industriales a incorporar sensores, automatización y análisis de
+                datos en sus procesos. Se relaciona con <em>IoT</em>, <em>Redes y Sistemas
+                Operativos</em>, <em>Ciberseguridad</em> y las <em>Prácticas externas</em>.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <img src="logo_cunef.png" alt="Logotipo de CUNEF Universidad" width="80" height="80">
+    <p>&copy; 2026 CUNEF Universidad.<br>Práctica 1 - Programación de Aplicaciones Web</p>
+    <a href="index.html">Volver al inicio</a>
+    <a href="https://www.cunef.edu/">Web oficial de CUNEF Universidad</a>
+  </footer>
+
+</body>
+</html>

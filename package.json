@@ -1,0 +1,15 @@
+{
+  "name": "practica1-asignaturas",
+  "version": "1.0.0",
+  "description": "Práctica 1 — Foundations API: API REST de asignaturas del Grado en Ciencia de Datos e IA (CUNEF Universidad)",
+  "private": true,
+  "type": "commonjs",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}

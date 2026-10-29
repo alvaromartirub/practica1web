@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<!-- Autores: Nombre Apellidos 1, Nombre Apellidos 2 -->
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="calculadora.css">
+  <script src="calculadora.js" defer></script>
+  <title>Calculadora de nota media — Grado en Ciencia de Datos e IA — CUNEF Universidad</title>
+</head>
+<body>
+
+  <header>
+    <h1>Calculadora de nota media</h1>
+    <p>Grado en Ciencia de Datos e Inteligencia Artificial</p>
+  </header>
+
+  <nav>
+    <a href="index.html">Inicio</a>
+    <a href="plan-estudios.html">Plan de estudios</a>
+    <a href="admision.html">Admisión</a>
+    <a href="noticias.html">Noticias</a>
+    <a href="salidas-profesionales.html">Salidas profesionales</a>
+    <a href="calculadora-notas.html">Calculadora de notas</a>
+  </nav>
+
+  <main>
+
+    <section id="introduccion-calculadora">
+      <h2>Calcula la media de tu curso</h2>
+      <p>
+        Elige un curso, escribe la nota (de 0 a 10) de las asignaturas que quieras y verás tu
+        <strong>nota media ponderada por créditos ECTS</strong>. Las asignaturas sin nota se
+        ignoran. Nada se guarda: si recargas la página, los datos se borran.
+      </p>
+    </section>
+
+    <section id="calculadora">
+
+      <div id="resultado" class="resultado" role="status" aria-live="polite">
+        <p class="resultado__etiqueta">Nota media del curso</p>
+        <p class="resultado__valor" id="media">–</p>
+        <p class="resultado__detalle" id="detalle">Elige un curso y escribe alguna nota.</p>
+      </div>
+
+      <div class="selector">
+        <label for="curso">Curso</label>
+        <select id="curso">
+          <option value="">Elige un curso</option>
+          <option value="1">1.º curso</option>
+          <option value="2">2.º curso</option>
+          <option value="3">3.º curso</option>
+          <option value="4">4.º curso</option>
+          <option value="5">5.º curso</option>
+        </select>
+        <button type="button" id="limpiar" class="secundario" hidden>Borrar notas</button>
+      </div>
+
+      <p id="cargando" hidden>Cargando asignaturas…</p>
+      <div id="bloque-error" hidden>
+        <p id="mensaje-error" class="error" role="alert"></p>
+        <button type="button" id="reintentar" class="secundario">Reintentar</button>
+      </div>
+      <p id="vacio" hidden>Este curso no tiene asignaturas.</p>
+
+      <ul id="asignaturas" class="notas" hidden></ul>
+
+    </section>
+
+  </main>
+
+  <footer>
+    <img src="logo_cunef.png" alt="Logotipo de CUNEF Universidad" width="80" height="80">
+    <p>&copy; 2026 CUNEF Universidad.<br>Práctica 1 - Programación de Aplicaciones Web</p>
+    <a href="index.html">Volver al inicio</a>
+    <a href="https://www.cunef.edu/">Web oficial de CUNEF Universidad</a>
+  </footer>
+
+</body>
+</html>
