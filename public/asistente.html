@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<!-- Autores: Nombre Apellidos 1, Nombre Apellidos 2 -->
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="asistente.css">
+  <script src="asistente-datos.js" defer></script>
+  <script src="asistente.js" defer></script>
+  <title>Asistente del grado — Grado en Ciencia de Datos e IA — CUNEF Universidad</title>
+</head>
+<body>
+
+  <header>
+    <h1>Asistente del grado</h1>
+    <p>Pregúntame por el grado, la admisión, las asignaturas o las salidas profesionales</p>
+  </header>
+
+  <nav>
+    <a href="index.html">Inicio</a>
+    <a href="plan-estudios.html">Plan de estudios</a>
+    <a href="admision.html">Admisión</a>
+    <a href="noticias.html">Noticias</a>
+    <a href="salidas-profesionales.html">Salidas profesionales</a>
+    <a href="calculadora-notas.html">Calculadora de notas</a>
+    <a href="asistente.html">Asistente</a>
+  </nav>
+
+  <main>
+
+    <section id="introduccion-asistente">
+      <h2>Habla con el asistente</h2>
+      <p>
+        Responde con la información de las páginas de este sitio y, para las asignaturas, consulta
+        la API de la aplicación. <strong>No es una inteligencia artificial</strong>: reconoce
+        palabras clave, así que funciona mejor con preguntas cortas y concretas. Nada de lo que
+        escribas se guarda.
+      </p>
+    </section>
+
+    <section id="chat" aria-labelledby="titulo-chat">
+      <h2 id="titulo-chat" class="solo-lectores">Conversación</h2>
+
+      <div id="mensajes" class="mensajes" role="log" aria-live="polite" aria-label="Conversación con el asistente"></div>
+
+      <div class="sugerencias" id="sugerencias" aria-label="Preguntas sugeridas"></div>
+
+      <form id="form-chat" class="form-chat" novalidate>
+        <label for="pregunta">Tu pregunta</label>
+        <div class="form-chat__fila">
+          <input type="text" id="pregunta" name="pregunta" autocomplete="off" maxlength="200"
+                 placeholder="Ej.: ¿Qué documentos necesito para la admisión?">
+          <button type="submit">Enviar</button>
+          <button type="button" id="borrar" class="secundario">Borrar chat</button>
+        </div>
+      </form>
+    </section>
+
+  </main>
+
+  <footer>
+    <img src="logo_cunef.png" alt="Logotipo de CUNEF Universidad" width="80" height="80">
+    <p>&copy; 2026 CUNEF Universidad.<br>Práctica 1 - Programación de Aplicaciones Web</p>
+    <a href="index.html">Volver al inicio</a>
+    <a href="https://www.cunef.edu/">Web oficial de CUNEF Universidad</a>
+  </footer>
+
+</body>
+</html>
