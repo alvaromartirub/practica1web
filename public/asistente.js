@@ -143,7 +143,8 @@ function elegirPregunta(pregunta) {
   if (pregunta.api) {
     responderConApi(pregunta);
   } else {
-    mostrarAsistente(pregunta);
+    // La pregunta guarda su respuesta en .respuesta (y .texto es la pregunta).
+    mostrarAsistente({ texto: pregunta.respuesta, lista: pregunta.lista, enlace: pregunta.enlace });
   }
 }
 
