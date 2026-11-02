@@ -42,8 +42,7 @@ async function cargarCurso() {
   mostrarEstado('cargando');
 
   try {
-    const params = new URLSearchParams({ curso, sort: 'nombre', order: 'asc', limit: '100' });
-    const respuesta = await fetch(`/asignaturas?${params}`);
+    const respuesta = await fetch(`/asignaturas?curso=${curso}&sort=nombre&order=asc`);
     if (!respuesta.ok) {
       throw new Error(`El servidor respondió con el error ${respuesta.status}`);
     }

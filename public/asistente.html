@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Autores: Nombre Apellidos 1, Nombre Apellidos 2 -->
+<!-- Autores: Álvaro Martínez Rubio, Javier Chico Alonso -->
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -14,7 +14,7 @@
 
   <header>
     <h1>Asistente del grado</h1>
-    <p>Pregúntame por el grado, la admisión, las asignaturas o las salidas profesionales</p>
+    <p>Elige un tema y pulsa la pregunta que quieras</p>
   </header>
 
   <nav>
@@ -32,10 +32,10 @@
     <section id="introduccion-asistente">
       <h2>Habla con el asistente</h2>
       <p>
-        Responde con la información de las páginas de este sitio y, para las asignaturas, consulta
-        la API de la aplicación. <strong>No es una inteligencia artificial</strong>: reconoce
-        palabras clave, así que funciona mejor con preguntas cortas y concretas. Nada de lo que
-        escribas se guarda.
+        Elige una categoría y pulsa una de sus preguntas: el asistente responde con la información
+        de las páginas de este sitio y, para las asignaturas, consulta la API de la aplicación.
+        <strong>No es una inteligencia artificial</strong>: las preguntas y respuestas están
+        escritas de antemano. Nada de lo que hagas se guarda.
       </p>
     </section>
 
@@ -44,17 +44,13 @@
 
       <div id="mensajes" class="mensajes" role="log" aria-live="polite" aria-label="Conversación con el asistente"></div>
 
-      <div class="sugerencias" id="sugerencias" aria-label="Preguntas sugeridas"></div>
+      <h3 class="titulo-panel">1. Elige una categoría</h3>
+      <div id="categorias" class="categorias" role="group" aria-label="Categorías de preguntas"></div>
 
-      <form id="form-chat" class="form-chat" novalidate>
-        <label for="pregunta">Tu pregunta</label>
-        <div class="form-chat__fila">
-          <input type="text" id="pregunta" name="pregunta" autocomplete="off" maxlength="200"
-                 placeholder="Ej.: ¿Qué documentos necesito para la admisión?">
-          <button type="submit">Enviar</button>
-          <button type="button" id="borrar" class="secundario">Borrar chat</button>
-        </div>
-      </form>
+      <h3 class="titulo-panel">2. Pulsa una pregunta</h3>
+      <div id="preguntas" class="sugerencias" role="group" aria-label="Preguntas de la categoría"></div>
+
+      <p><button type="button" id="borrar" class="secundario">Borrar chat</button></p>
     </section>
 
   </main>

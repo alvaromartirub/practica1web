@@ -10,7 +10,7 @@
 //
 // ¿Por qué un archivo aparte?
 //   El controlador (que responde a las peticiones) nunca toca el array: solo
-//   llama a las funciones de este archivo (findAll, create...). Si un día se
+//   llama a las funciones de este archivo (list, create...). Si un día se
 //   cambia el array por una base de datos, solo hay que reescribir ESTE
 //   archivo y el resto del proyecto no se entera.
 //
@@ -92,7 +92,7 @@ function buscarPosicion(id) {
 
 // Todas las asignaturas (copias). El filtrado, el orden y la paginación
 // los hace el controlador sobre esta lista.
-function findAll() {
+function list() {
   return asignaturas.map(copia);
 }
 
@@ -139,4 +139,4 @@ function reset() {
   cargarSemilla();
 }
 
-module.exports = { findAll, findById, create, replace, update, remove, reset };
+module.exports = { list, findById, create, replace, update, remove, reset };

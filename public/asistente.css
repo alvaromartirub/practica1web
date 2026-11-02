@@ -97,6 +97,35 @@
   background-color: var(--color-secundario, #0796a3);
 }
 
+/* Panel de categorías y preguntas */
+.titulo-panel {
+  margin: var(--espacio-2, 1rem) 0 0.25rem;
+  font-size: 1rem;
+}
+
+.categorias {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espacio-1, 0.5rem);
+}
+
+.categoria {
+  padding: 0.4rem var(--espacio-2, 1rem);
+  font: inherit;
+  font-weight: bold;
+  color: var(--color-primario, #1a1f6c);
+  background-color: var(--color-superficie, #ffffff);
+  border: 2px solid var(--color-primario, #1a1f6c);
+  border-radius: var(--radio, 8px);
+  cursor: pointer;
+}
+
+.categoria:hover,
+.categoria[aria-pressed="true"] {
+  color: #ffffff;
+  background-color: var(--color-primario, #1a1f6c);
+}
+
 /* Formulario del chat (anula el estilo general de "form") */
 .form-chat {
   max-width: none;
@@ -140,6 +169,8 @@
 
 /* Foco visible */
 .sugerencia:focus-visible,
+.categoria:focus-visible,
+#borrar:focus-visible,
 .form-chat input:focus-visible,
 .form-chat button:focus-visible,
 .mensaje a:focus-visible {

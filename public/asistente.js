@@ -1,29 +1,19 @@
-// Asistente del grado: chatbot por reglas, sin base de datos ni servicios externos.
+// Asistente del grado: panel de preguntas ya escritas, sin base de datos ni servicios externos.
 //
-// Cómo decide qué responder (por orden):
-//   1. Saludo, agradecimiento o petición de ayuda.
-//   2. Una asignatura concreta ("háblame de Álgebra")  -> datos de la API.
-//   3. Un curso ("asignaturas de 2.º")                 -> lista desde la API.
-//   4. Un área, optativas o "cuántas asignaturas"      -> datos de la API.
-//   5. La base de conocimiento (asistente-datos.js)    -> la entrada con más palabras clave.
-//   6. Si nada encaja: lo dice y propone preguntas.
+// Cómo funciona:
+//   1. Se muestran las categorías (Grado, Plan de estudios, Cursos...), que salen de
+//      CATEGORIAS en asistente-datos.js.
+//   2. Al pulsar una categoría se muestran sus preguntas.
+//   3. Al pulsar una pregunta se escribe en el chat y el asistente contesta:
+//        - si la pregunta tiene una respuesta fija, la muestra;
+//        - si tiene "api", pide los datos al servidor con fetch y los muestra.
 //
 // La conversación solo existe en la página: no se guarda en ningún sitio.
 
 const mensajes = document.querySelector('#mensajes');
-const form = document.querySelector('#form-chat');
-const campo = document.querySelector('#pregunta');
-const contenedorSugerencias = document.querySelector('#sugerencias');
-
-const SUGERENCIAS = [
-  '¿Cómo es el proceso de admisión?',
-  '¿Qué documentos necesito?',
-  'Asignaturas de 2.º curso',
-  '¿Qué salidas profesionales hay?',
-  '¿Qué es un Minor?',
-  '¿Cuántas asignaturas hay?',
-  'Háblame de Álgebra',
-];
+const contenedorCategorias = document.querySelector('#categorias');
+const contenedorPreguntas = document.querySelector('#preguntas');
+const botonBorrar = document.querySelector('#borrar');
 
 const NOMBRES_AREA = {
   programacion: 'Programación',
@@ -33,35 +23,17 @@ const NOMBRES_AREA = {
   etica: 'Ética',
 };
 
-const ORDINALES = { primer: 1, primero: 1, primera: 1, segundo: 2, tercer: 3, tercero: 3, cuarto: 4, quinto: 5 };
-const PALABRAS_VACIAS = ['de', 'del', 'la', 'las', 'el', 'los', 'y', 'e', 'en', 'a', 'para', 'con', 'una', 'un'];
+const SIN_API = {
+  texto: 'Ahora mismo no puedo consultar las asignaturas porque el servidor no responde. Puedes verlas en el plan de estudios.',
+  enlace: { texto: 'Plan de estudios', url: 'plan-estudios.html#asignaturas' },
+};
 
-let asignaturas = null; // se carga una vez desde la API; null si no se ha podido
+// ---------- Burbujas del chat ----------
 
-// ---------- Utilidades ----------
-
-// Minúsculas, sin tildes y sin signos: "¿Qué es el 2.º curso?" -> "que es el 2 curso"
-function normalizar(texto) {
-  return texto
-    .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
-    .toLowerCase()
-    .replace(/[^a-z0-9ñ ]+/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
-}
-
-// ¿Aparece la palabra clave al principio de alguna palabra del texto?
-function contiene(textoNormalizado, clave) {
-  return new RegExp(`(^| )${normalizar(clave)}`).test(textoNormalizado);
-}
-
-// ---------- Interfaz del chat ----------
-
-function burbuja(clase) {
+function crearBurbuja(clase) {
   const div = document.createElement('div');
-  div.className = `mensaje ${clase}`;
-  mensajes.append(div);
+  div.className = 'mensaje ' + clase;
+  mensajes.appendChild(div);
   return div;
 }
 
@@ -70,27 +42,27 @@ function bajar() {
 }
 
 function mostrarUsuario(texto) {
-  const div = burbuja('mensaje--usuario');
-  div.textContent = texto; // textContent: lo escrito nunca se interpreta como HTML
+  const div = crearBurbuja('mensaje--usuario');
+  div.textContent = texto; // textContent: nunca se interpreta como HTML
   bajar();
 }
 
 // respuesta = { texto, lista?, enlace? }
 function mostrarAsistente(respuesta) {
-  const div = burbuja('mensaje--asistente');
+  const div = crearBurbuja('mensaje--asistente');
 
   const p = document.createElement('p');
   p.textContent = respuesta.texto;
-  div.append(p);
+  div.appendChild(p);
 
   if (respuesta.lista && respuesta.lista.length > 0) {
     const ul = document.createElement('ul');
     for (const elemento of respuesta.lista) {
       const li = document.createElement('li');
       li.textContent = elemento;
-      ul.append(li);
+      ul.appendChild(li);
     }
-    div.append(ul);
+    div.appendChild(ul);
   }
 
   if (respuesta.enlace) {
@@ -100,217 +72,124 @@ function mostrarAsistente(respuesta) {
     const a = document.createElement('a');
     a.href = respuesta.enlace.url;
     a.textContent = respuesta.enlace.texto;
-    pie.append(a);
-    div.append(pie);
+    pie.appendChild(a);
+    div.appendChild(pie);
   }
   bajar();
 }
 
-// Pequeña pausa con "escribiendo…" para que la conversación se sienta natural.
-function responderConRetraso(respuesta) {
-  const espera = burbuja('mensaje--asistente mensaje--espera');
-  espera.textContent = 'Escribiendo…';
-  bajar();
-  setTimeout(() => {
-    espera.remove();
-    mostrarAsistente(respuesta);
-  }, 350);
+// ---------- Respuestas que vienen de la API ----------
+
+// Una línea por asignatura: "Álgebra · 1.º curso · 6 ECTS · Obligatoria"
+// La lista de reserva no tiene créditos, así que solo se añaden si existen.
+function lineaAsignatura(a) {
+  let linea = a.nombre + ' · ' + a.curso + '.º curso';
+  if (a.creditos !== undefined) linea += ' · ' + a.creditos + ' ECTS';
+  linea += ' · ' + (a.obligatoria ? 'Obligatoria' : 'Optativa');
+  return linea;
 }
 
-// ---------- Datos de la API ----------
+async function responderConApi(pregunta) {
+  const api = pregunta.api;
+  let respuesta;
 
-async function cargarAsignaturas() {
   try {
-    const respuesta = await fetch('/asignaturas?limit=100&sort=curso&order=asc');
-    if (!respuesta.ok) throw new Error(String(respuesta.status));
-    asignaturas = await respuesta.json();
-  } catch (e) {
-    asignaturas = null; // el asistente seguirá respondiendo con la base de conocimiento
-  }
-}
+    const response = await fetch(api.url);
+    // fetch NO falla con un 404 o un 500: hay que comprobar response.ok.
+    if (!response.ok) throw new Error('estado ' + response.status);
+    const datos = await response.json();
 
-const SIN_API = {
-  texto: 'Ahora mismo no puedo consultar las asignaturas porque el servidor no responde. Puedes verlas en el plan de estudios.',
-  enlace: { texto: 'Plan de estudios', url: 'plan-estudios.html#asignaturas' },
-};
-
-function describir(a) {
-  return `${a.nombre} — ${a.curso}.º curso, ${a.creditos} ECTS, ${a.obligatoria ? 'obligatoria' : 'optativa'}`;
-}
-
-// ---------- Reglas que usan la API ----------
-
-// Busca si el mensaje habla de una asignatura concreta: compara las palabras de su nombre.
-function buscarAsignatura(texto) {
-  const palabrasTexto = texto.split(' ');
-  let mejor = null;
-  let mejorPuntuacion = 0;
-
-  for (const a of asignaturas) {
-    const palabras = normalizar(a.nombre).split(' ').filter((p) => !PALABRAS_VACIAS.includes(p));
-    const aciertos = palabras.filter((p) => palabrasTexto.includes(p)).length;
-    const puntuacion = aciertos / palabras.length;
-    if (puntuacion >= 0.6 && puntuacion > mejorPuntuacion) {
-      mejor = a;
-      mejorPuntuacion = puntuacion;
-    }
-  }
-  return mejor;
-}
-
-function detectarCurso(texto) {
-  if (!/(curso|asignatura|materia|ano)/.test(texto)) return null;
-  for (const [palabra, numero] of Object.entries(ORDINALES)) {
-    if (contiene(texto, palabra)) return numero;
-  }
-  const m = texto.match(/(^| )(?:curso )?([1-5])( |$)/);
-  return m ? Number(m[2]) : null;
-}
-
-function reglasConApi(texto) {
-  const asignatura = buscarAsignatura(texto);
-  if (asignatura) {
-    return {
-      texto: `${describir(asignatura)}, área ${NOMBRES_AREA[asignatura.area] || asignatura.area}.`,
-      enlace: { texto: 'Plan de estudios', url: 'plan-estudios.html#asignaturas' },
-    };
-  }
-
-  const curso = detectarCurso(texto);
-  if (curso) {
-    const delCurso = asignaturas.filter((a) => a.curso === curso);
-    return {
-      texto: delCurso.length > 0 ? `Asignaturas de ${curso}.º curso (${delCurso.length}):` : `No tengo asignaturas registradas en ${curso}.º curso.`,
-      lista: delCurso.map((a) => `${a.nombre} (${a.creditos} ECTS${a.obligatoria ? '' : ', optativa'})`),
-      enlace: { texto: 'Plan de estudios', url: 'plan-estudios.html#asignaturas' },
-    };
-  }
-
-  if (/cuantas (asignaturas|materias)/.test(texto)) {
-    const obligatorias = asignaturas.filter((a) => a.obligatoria).length;
-    return {
-      texto: `La aplicación tiene ${asignaturas.length} asignaturas: ${obligatorias} obligatorias y ${asignaturas.length - obligatorias} optativas.`,
-      enlace: { texto: 'Listado de asignaturas', url: 'index.html' },
-    };
-  }
-
-  if (/optativ/.test(texto)) {
-    const optativas = asignaturas.filter((a) => !a.obligatoria);
-    return {
-      texto: `Asignaturas optativas (${optativas.length}):`,
-      lista: optativas.map(describir),
-      enlace: { texto: 'Minor opcional', url: 'plan-estudios.html#minor' },
-    };
-  }
-
-  for (const [area, nombre] of Object.entries(NOMBRES_AREA)) {
-    if (/asignatura|materia/.test(texto) && contiene(texto, normalizar(nombre))) {
-      const delArea = asignaturas.filter((a) => a.area === area);
-      return {
-        texto: `Asignaturas del área de ${nombre} (${delArea.length}):`,
-        lista: delArea.map(describir),
-        enlace: { texto: 'Plan de estudios', url: 'plan-estudios.html#asignaturas' },
+    if (api.tipo === 'lista') {
+      respuesta = {
+        texto: datos.length === 0 ? 'No hay asignaturas que cumplan esa consulta.' : api.intro + ' (' + datos.length + '):',
+        lista: datos.map(lineaAsignatura),
       };
+    } else if (api.tipo === 'resumen') {
+      respuesta = {
+        texto: api.intro + ':',
+        lista: [
+          'Asignaturas: ' + datos.total,
+          'Obligatorias: ' + datos.obligatorias,
+          'Optativas: ' + datos.optativas,
+          'Créditos totales: ' + datos.creditosTotales + ' ECTS',
+        ],
+      };
+    } else {
+      // tipo 'areas': datos.porArea es un objeto { area: cantidad }
+      const lista = [];
+      for (const area of Object.keys(datos.porArea)) {
+        lista.push(NOMBRES_AREA[area] + ': ' + datos.porArea[area]);
+      }
+      respuesta = { texto: api.intro + ':', lista };
+    }
+  } catch (error) {
+    // Sin API: si la pregunta tiene lista de reserva, se usa; si no, se avisa.
+    if (api.tipo === 'lista' && api.respaldo) {
+      const lista = PLAN_RESPALDO.filter(api.respaldo).map(lineaAsignatura);
+      respuesta = { texto: api.intro + ' (' + lista.length + ', sin datos del servidor):', lista };
+    } else {
+      respuesta = SIN_API;
     }
   }
-  return null;
+
+  respuesta.enlace = pregunta.enlace;
+  mostrarAsistente(respuesta);
 }
 
-// ---------- Base de conocimiento ----------
+// ---------- Panel de categorías y preguntas ----------
 
-function buscarEnBase(texto) {
-  let mejor = null;
-  let mejorPuntuacion = 0;
-  for (const entrada of BASE_CONOCIMIENTO) {
-    const aciertos = entrada.palabras.filter((p) => contiene(texto, p)).length;
-    const puntuacion = aciertos * (entrada.peso || 1);
-    if (puntuacion > mejorPuntuacion) {
-      mejor = entrada;
-      mejorPuntuacion = puntuacion;
-    }
+function elegirPregunta(pregunta) {
+  mostrarUsuario(pregunta.texto);
+  if (pregunta.api) {
+    responderConApi(pregunta);
+  } else {
+    mostrarAsistente(pregunta);
   }
-  return mejor;
 }
 
-// ---------- Decisión ----------
-
-function responder(pregunta) {
-  const texto = normalizar(pregunta);
-
-  if (texto === '') {
-    return { texto: 'Escribe una pregunta, por ejemplo: «¿Qué documentos necesito para la admisión?».' };
+function mostrarPreguntas(categoria) {
+  contenedorPreguntas.textContent = '';
+  for (const pregunta of categoria.preguntas) {
+    const boton = document.createElement('button');
+    boton.type = 'button';
+    boton.className = 'sugerencia';
+    boton.textContent = pregunta.texto;
+    boton.addEventListener('click', () => elegirPregunta(pregunta));
+    contenedorPreguntas.appendChild(boton);
   }
-  if (/^(hola|buenas|buenos dias|buenas tardes|buenas noches|hey|que tal)( |$)/.test(texto)) {
-    return { texto: '¡Hola! Soy el asistente del grado. Pregúntame por la admisión, el plan de estudios, una asignatura o las salidas profesionales.' };
-  }
-  if (/(gracias|genial|perfecto|vale gracias)/.test(texto)) {
-    return { texto: '¡De nada! Si tienes otra duda, aquí estoy.' };
-  }
-  if (/(ayuda|que puedes|que sabes|que haces|como funciona)/.test(texto)) {
-    return {
-      texto: 'Puedo responder sobre:',
-      lista: ['El grado y sus datos (duración, créditos, centro)', 'El proceso de admisión y la documentación', 'Las asignaturas de cada curso o de una en concreto', 'Los Minors', 'Las salidas profesionales', 'Las noticias'],
-    };
-  }
-
-  // Preguntas sobre asignaturas: se resuelven con la API.
-  if (asignaturas !== null) {
-    const respuestaApi = reglasConApi(texto);
-    if (respuestaApi) return respuestaApi;
-  }
-
-  const entrada = buscarEnBase(texto);
-  if (entrada) {
-    return { texto: entrada.respuesta, lista: entrada.lista, enlace: entrada.enlace };
-  }
-
-  // Si hablaba de asignaturas pero la API no está disponible, se explica.
-  if (asignaturas === null && /(asignatura|materia|curso)/.test(texto)) return SIN_API;
-
-  return {
-    texto: 'No he entendido tu pregunta. Prueba con palabras clave como «admisión», «documentos», «minor», «salidas profesionales» o «asignaturas de 3.º curso».',
-    lista: SUGERENCIAS.slice(0, 4),
-  };
 }
 
-// ---------- Eventos ----------
-
-function preguntar(texto) {
-  const limpio = texto.trim();
-  if (limpio === '') return;
-  mostrarUsuario(limpio);
-  responderConRetraso(responder(limpio));
+function elegirCategoria(categoria) {
+  // aria-pressed marca visualmente (y para lectores de pantalla) la categoría activa.
+  for (const boton of contenedorCategorias.querySelectorAll('button')) {
+    boton.setAttribute('aria-pressed', boton.textContent === categoria.nombre ? 'true' : 'false');
+  }
+  mostrarPreguntas(categoria);
 }
 
-form.addEventListener('submit', (evento) => {
-  evento.preventDefault();
-  preguntar(campo.value);
-  campo.value = '';
-  campo.focus();
-});
+function crearCategorias() {
+  for (const categoria of CATEGORIAS) {
+    const boton = document.createElement('button');
+    boton.type = 'button';
+    boton.className = 'categoria';
+    boton.textContent = categoria.nombre;
+    boton.addEventListener('click', () => elegirCategoria(categoria));
+    contenedorCategorias.appendChild(boton);
+  }
+}
 
-contenedorSugerencias.addEventListener('click', (evento) => {
-  const boton = evento.target.closest('button');
-  if (boton) preguntar(boton.textContent);
-});
+function saludar() {
+  mostrarAsistente({
+    texto: 'Hola, soy el asistente del Grado en Ciencia de Datos e Inteligencia Artificial. Elige una categoría y pulsa la pregunta que quieras.',
+  });
+}
 
-document.querySelector('#borrar').addEventListener('click', () => {
-  mensajes.replaceChildren();
-  mostrarAsistente({ texto: 'Conversación borrada. ¿En qué puedo ayudarte?' });
-  campo.focus();
+botonBorrar.addEventListener('click', () => {
+  mensajes.textContent = '';
+  saludar();
 });
 
 // ---------- Arranque ----------
-
-for (const sugerencia of SUGERENCIAS) {
-  const boton = document.createElement('button');
-  boton.type = 'button';
-  boton.className = 'sugerencia';
-  boton.textContent = sugerencia;
-  contenedorSugerencias.append(boton);
-}
-
-mostrarAsistente({
-  texto: '¡Hola! Soy el asistente del Grado en Ciencia de Datos e Inteligencia Artificial. Puedes escribirme o elegir una pregunta de abajo.',
-});
-cargarAsignaturas();
+crearCategorias();
+elegirCategoria(CATEGORIAS[0]);
+saludar();

@@ -6,8 +6,8 @@
 // recorre los app.use(...) de arriba abajo y se queda con el primero que
 // responde. El orden de este archivo es:
 //
-//   1. logger          apunta la petición
-//   2. express.json()  convierte el cuerpo JSON en req.body
+//   1. express.json()  convierte el cuerpo JSON en req.body
+//   2. logger          apunta la petición
 //   3. express.static  si piden un archivo de public/, lo entrega
 //   4. /health y /asignaturas   las rutas de la API
 //   5. 404             nada de lo anterior respondió
@@ -23,13 +23,13 @@ const asignaturasRouter = require('./routes/asignaturas');
 
 const app = express();
 
-// 1. Registro de peticiones (el primero, para que apunte también los errores).
-app.use(logger);
-
-// 2. Lee el cuerpo de las peticiones POST/PUT/PATCH cuando es JSON y lo deja
+// 1. Lee el cuerpo de las peticiones POST/PUT/PATCH cuando es JSON y lo deja
 //    en req.body. Si el JSON está mal escrito lanza un error que recoge el
 //    manejador del final (paso 6).
 app.use(express.json());
+
+// 2. Registro de peticiones (mismo orden que el esqueleto visto en clase).
+app.use(logger);
 
 // 3. Contenido estático: sirve la carpeta public/ (index.html, styles.css...).
 //    Como la página y la API salen del MISMO servidor, comparten origen y
@@ -49,7 +49,7 @@ app.use('/asignaturas', asignaturasRouter);
 // 5. Ruta no encontrada. Si la petición llega hasta aquí es que ninguna de
 //    las anteriores la ha respondido. Se contesta en JSON, no en HTML.
 app.use((req, res) => {
-  res.status(404).json({ error: 'Ruta no encontrada' });
+  res.status(404).json({ error: 'Route not found' });
 });
 
 // 6. Manejador centralizado de errores. Express lo reconoce porque tiene
@@ -65,7 +65,7 @@ app.use((err, req, res, next) => {
   }
   // Cualquier otro fallo es nuestro: se apunta en la terminal y se responde 500.
   console.error(err);
-  res.status(500).json({ error: 'Error interno del servidor' });
+  res.status(500).json({ error: 'Internal server error' });
 });
 
 module.exports = app;

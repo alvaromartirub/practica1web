@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<!-- Autores: Nombre Apellidos 1, Nombre Apellidos 2 -->
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+  <title>Aplicación de asignaturas — Grado en Ciencia de Datos e IA — CUNEF Universidad</title>
+</head>
+<body>
+
+  <header>
+    <h1>Asignaturas del Grado en Ciencia de Datos e Inteligencia Artificial</h1>
+    <p>CUNEF Universidad - Escuela Politécnica Superior</p>
+  </header>
+
+  <nav>
+    <a href="index.html">Inicio</a>
+    <a href="plan-estudios.html">Plan de estudios</a>
+    <a href="admision.html">Admisión</a>
+    <a href="noticias.html">Noticias</a>
+    <a href="asignaturas.html">Asignaturas</a>
+  </nav>
+
+  <main>
+
+    <section id="introduccion">
+      <h2>Introducción al Grado</h2>
+      <p>
+        El Grado en Inteligencia Artificial y Ciencia de Datos prepara al estudiante para un futuro
+        profesional orientado al desarrollo de proyectos de tecnología en
+        <strong>equipos multidisciplinares</strong>. Desde aquí puedes consultar, buscar y gestionar
+        las asignaturas del plan de estudios.
+      </p>
+    </section>
+
+    <section id="resumen" aria-labelledby="titulo-resumen">
+      <h2 id="titulo-resumen">Resumen del catálogo</h2>
+      <p id="resumen-error" class="error" role="alert" hidden></p>
+      <dl id="resumen-datos" class="resumen" hidden>
+        <div><dt>Asignaturas</dt><dd id="est-total">–</dd></div>
+        <div><dt>Obligatorias</dt><dd id="est-obligatorias">–</dd></div>
+        <div><dt>Optativas</dt><dd id="est-optativas">–</dd></div>
+        <div><dt>ECTS totales</dt><dd id="est-creditos">–</dd></div>
+      </dl>
+      <ul id="est-areas" class="resumen-areas" aria-label="Asignaturas por área"></ul>
+    </section>
+
+    <section id="alta">
+      <h2 id="titulo-formulario">Nueva asignatura</h2>
+      <form id="form-asignatura" novalidate aria-labelledby="titulo-formulario">
+        <p id="error-general" class="error" role="alert" hidden></p>
+        <p>
+          <label for="nombre">Nombre</label>
+          <input type="text" id="nombre" name="nombre" maxlength="80" aria-describedby="error-nombre">
+          <span class="error" id="error-nombre" data-campo="nombre"></span>
+        </p>
+        <div class="fila">
+          <p>
+            <label for="creditos">Créditos (ECTS)</label>
+            <input type="number" id="creditos" name="creditos" min="1" max="12" aria-describedby="error-creditos">
+            <span class="error" id="error-creditos" data-campo="creditos"></span>
+          </p>
+          <p>
+            <label for="curso">Curso</label>
+            <input type="number" id="curso" name="curso" min="1" max="5" aria-describedby="error-curso">
+            <span class="error" id="error-curso" data-campo="curso"></span>
+          </p>
+        </div>
+        <p>
+          <label for="area">Área</label>
+          <select id="area" name="area" aria-describedby="error-area">
+            <option value="">Elige un área</option>
+            <option value="programacion">Programación</option>
+            <option value="matematicas">Matemáticas</option>
+            <option value="datos-ia">Datos e IA</option>
+            <option value="sistemas">Sistemas</option>
+            <option value="etica">Ética</option>
+          </select>
+          <span class="error" id="error-area" data-campo="area"></span>
+        </p>
+        <p class="casilla">
+          <input type="checkbox" id="obligatoria" name="obligatoria">
+          <label for="obligatoria">Obligatoria</label>
+        </p>
+        <div class="acciones-formulario">
+          <button type="submit" id="boton-guardar">Guardar</button>
+          <button type="button" id="boton-cancelar" class="secundario" hidden>Cancelar edición</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="listado" aria-labelledby="titulo-listado">
+      <h2 id="titulo-listado">Listado de asignaturas</h2>
+
+      <div class="controles">
+        <div class="campo-control campo-buscar">
+          <label for="buscar">Buscar por nombre</label>
+          <input type="search" id="buscar" placeholder="Ej.: álgebra">
+        </div>
+        <div class="campo-control">
+          <label for="filtro-area">Área</label>
+          <select id="filtro-area">
+            <option value="">Todas</option>
+            <option value="programacion">Programación</option>
+            <option value="matematicas">Matemáticas</option>
+            <option value="datos-ia">Datos e IA</option>
+            <option value="sistemas">Sistemas</option>
+            <option value="etica">Ética</option>
+          </select>
+        </div>
+        <div class="campo-control">
+          <label for="filtro-tipo">Tipo</label>
+          <select id="filtro-tipo">
+            <option value="">Todas</option>
+            <option value="true">Obligatorias</option>
+            <option value="false">Optativas</option>
+          </select>
+        </div>
+        <div class="campo-control">
+          <label for="filtro-curso">Curso</label>
+          <select id="filtro-curso">
+            <option value="">Todos</option>
+            <option value="1">1.º</option>
+            <option value="2">2.º</option>
+            <option value="3">3.º</option>
+            <option value="4">4.º</option>
+            <option value="5">5.º</option>
+          </select>
+        </div>
+        <div class="campo-control">
+          <label for="orden-campo">Ordenar por</label>
+          <select id="orden-campo">
+            <option value="nombre">Nombre</option>
+            <option value="curso">Curso</option>
+            <option value="creditos">ECTS</option>
+            <option value="area">Área</option>
+          </select>
+        </div>
+        <div class="campo-control">
+          <label for="orden-sentido">Sentido</label>
+          <select id="orden-sentido">
+            <option value="asc">Ascendente</option>
+            <option value="desc">Descendente</option>
+          </select>
+        </div>
+        <button type="button" id="limpiar" class="secundario">Limpiar filtros</button>
+      </div>
+
+      <p id="contador" role="status" aria-live="polite"></p>
+      <p id="cargando" hidden>Cargando…</p>
+      <p id="mensaje-error" class="error" role="alert" hidden></p>
+      <p id="vacio" hidden>No hay asignaturas que coincidan con la búsqueda.</p>
+
+      <div class="tabla-contenedor">
+        <table id="tabla" hidden>
+          <caption class="solo-lectores">Asignaturas del grado</caption>
+          <thead>
+            <tr>
+              <th scope="col">Nombre</th>
+              <th scope="col">Curso</th>
+              <th scope="col">ECTS</th>
+              <th scope="col">Área</th>
+              <th scope="col">Tipo</th>
+              <th scope="col">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="lista"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <aside>
+      <h2>Datos del grado</h2>
+      <ul>
+        <li>Duración: 5 cursos académicos</li>
+        <li>Créditos: 324 ECTS</li>
+        <li>Centro: Escuela Politécnica Superior</li>
+      </ul>
+      <p>
+        Consulta el <a href="plan-estudios.html#asignaturas">plan de estudios</a> por cursos o el
+        <a href="admision.html">proceso de admisión</a>.
+      </p>
+    </aside>
+
+  </main>
+
+  <footer>
+    <img src="logo_cunef.png" alt="Logotipo de CUNEF Universidad" width="80" height="80">
+    <p>&copy; 2026 CUNEF Universidad.<br>Práctica 1 - Programación de Aplicaciones Web</p>
+    <a href="https://www.cunef.edu/">Web oficial de CUNEF Universidad</a>
+  </footer>
+
+  <div id="aviso" class="aviso" role="status" aria-live="polite" hidden></div>
+
+</body>
+</html>
