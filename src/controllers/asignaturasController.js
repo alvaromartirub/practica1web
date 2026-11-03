@@ -1,12 +1,12 @@
 // El controlador recibe la petición, usa el store y responde.
 // No sabe cómo se guardan los datos: solo llama a las funciones de store.js.
-
+ 
 const store = require('../data/store');
 const { validateAsignatura, AREAS } = require('../validators/asignaturasValidator');
-
+ 
 // Campos que el cliente puede enviar. Los demás (incluido id) se ignoran.
 const CAMPOS = ['nombre', 'creditos', 'curso', 'obligatoria', 'area'];
-
+ 
 function soloCamposPermitidos(body) {
   const limpio = {};
   const origen = body && typeof body === 'object' ? body : {};
@@ -17,31 +17,31 @@ function soloCamposPermitidos(body) {
   }
   return limpio;
 }
-
+ 
 // El id de la URL debe ser un entero positivo; si no, se trata como no encontrado.
 function leerId(req) {
   return /^\d+$/.test(req.params.id) ? Number(req.params.id) : null;
 }
-
+ 
 function noEncontrada(res) {
   return res.status(404).json({ error: 'Subject not found' });
 }
-
+ 
 // Parámetros de consulta admitidos. Política: un parámetro desconocido o con
 // un valor inválido responde 400 (no se ignora en silencio).
 const PARAMS = ['search', 'area', 'obligatoria', 'curso', 'sort', 'order', 'limit', 'offset'];
 const CAMPOS_ORDEN = ['nombre', 'creditos', 'curso', 'area'];
-
+ 
 function entero(valor) {
   return /^\d+$/.test(valor) ? Number(valor) : null;
 }
-
+ 
 // Devuelve { errors } o { consulta } con los valores ya convertidos.
 function leerConsulta(query) {
   const errors = [];
   // Sin limit por defecto: si no se pide una ventana, se devuelve todo.
   const consulta = { sort: 'nombre', order: 'asc', offset: 0 };
-
+ 
   for (const clave of Object.keys(query)) {
     if (!PARAMS.includes(clave)) {
       errors.push({ field: clave, message: `Parámetro desconocido. Admitidos: ${PARAMS.join(', ')}` });
@@ -52,7 +52,7 @@ function leerConsulta(query) {
     if (Array.isArray(query[clave])) errors.push({ field: clave, message: 'No se admite repetir el parámetro' });
   }
   if (errors.length) return { errors };
-
+ 
   if (query.search !== undefined) consulta.search = query.search.trim().toLowerCase();
   if (query.area !== undefined) {
     if (!AREAS.includes(query.area)) errors.push({ field: 'area', message: `Debe ser una de: ${AREAS.join(', ')}` });
@@ -85,21 +85,21 @@ function leerConsulta(query) {
     if (n === null) errors.push({ field: 'offset', message: 'Debe ser un entero mayor o igual que 0' });
     else consulta.offset = n;
   }
-
+ 
   return errors.length ? { errors } : { consulta };
 }
-
+ 
 // Se filtra, se ordena y al final se recorta la ventana (limit/offset).
-function list(req, res) {
+function listAsignaturas(req, res) {
   const { errors, consulta } = leerConsulta(req.query);
   if (errors) return res.status(400).json({ errors });
-
+ 
   let lista = store.list();
   if (consulta.search) lista = lista.filter((a) => a.nombre.toLowerCase().includes(consulta.search));
   if (consulta.area !== undefined) lista = lista.filter((a) => a.area === consulta.area);
   if (consulta.obligatoria !== undefined) lista = lista.filter((a) => a.obligatoria === consulta.obligatoria);
   if (consulta.curso !== undefined) lista = lista.filter((a) => a.curso === consulta.curso);
-
+ 
   // Ordenar por el campo elegido. Si order=desc se invierte el resultado.
   const campo = consulta.sort;
   lista.sort((a, b) => {
@@ -108,12 +108,12 @@ function list(req, res) {
     return 0;
   });
   if (consulta.order === 'desc') lista.reverse();
-
+ 
   // Ventana de resultados. Sin limit se devuelve hasta el final.
   const fin = consulta.limit === undefined ? undefined : consulta.offset + consulta.limit;
   res.json(lista.slice(consulta.offset, fin));
 }
-
+ 
 // Resumen de todo el catálogo (sin filtros).
 function getStats(req, res) {
   const lista = store.list();
@@ -134,14 +134,14 @@ function getStats(req, res) {
     porCurso,
   });
 }
-
-function getById(req, res) {
+ 
+function getAsignatura(req, res) {
   const id = leerId(req);
   const asignatura = id === null ? undefined : store.findById(id);
   if (!asignatura) return noEncontrada(res);
   res.json(asignatura);
 }
-
+ 
 // Valida y devuelve true si hay errores (ya ha respondido 400).
 function hayErrores(res, body, partial) {
   const { errors } = validateAsignatura(body, { partial });
@@ -151,33 +151,41 @@ function hayErrores(res, body, partial) {
   }
   return false;
 }
-
-function create(req, res) {
+ 
+function createAsignatura(req, res) {
   if (hayErrores(res, req.body, false)) return;
   const creada = store.create(soloCamposPermitidos(req.body));
   res.status(201).location(`/asignaturas/${creada.id}`).json(creada);
 }
-
+ 
 // PUT: sustituye la asignatura entera, así que exige todos los campos.
-function replace(req, res) {
+function replaceAsignatura(req, res) {
   const id = leerId(req);
   if (id === null || !store.findById(id)) return noEncontrada(res);
   if (hayErrores(res, req.body, false)) return;
   res.json(store.replace(id, soloCamposPermitidos(req.body)));
 }
-
+ 
 // PATCH: cambia solo los campos enviados; cada uno se valida igual que en PUT.
-function update(req, res) {
+function updateAsignatura(req, res) {
   const id = leerId(req);
   if (id === null || !store.findById(id)) return noEncontrada(res);
   if (hayErrores(res, req.body, true)) return;
   res.json(store.update(id, soloCamposPermitidos(req.body)));
 }
-
-function remove(req, res) {
+ 
+function deleteAsignatura(req, res) {
   const id = leerId(req);
   if (id === null || !store.remove(id)) return noEncontrada(res);
   res.status(204).end();
 }
-
-module.exports = { list, getStats, getById, create, replace, update, remove, soloCamposPermitidos, leerId, noEncontrada };
+ 
+module.exports = {
+  listAsignaturas,
+  getStats,
+  getAsignatura,
+  createAsignatura,
+  replaceAsignatura,
+  updateAsignatura,
+  deleteAsignatura,
+};
