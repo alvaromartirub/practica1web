@@ -225,4 +225,8 @@ La carpeta `AI/` documenta el trabajo con agentes:
 
 ## Limitaciones conocidas
 
-Detectadas en la revisión y no corregidas en esta entrega (detalle en `AI/review-log.md`): la ordenación por texto no trata bien las tildes, el buscador no codifica caracteres como `&` o `#`, y un cuerpo JSON de más de 100 KB devuelve 500 en lugar de 413.
+Detectadas en la revisión y no corregidas en esta entrega (detalle en `AI/review-log.md`): la ordenación por texto no trata bien las tildes, el buscador no codifica caracteres como `&` o `#`, y un cuerpo JSON de más de 100 KB devuelve 500 en lugar de 413. Decidimos no corregirlas para mantener el código sencillo y explicable por los dos, ya que no afectan al uso normal de la aplicación.
+
+Además de lo que pide la práctica, añadimos dos ideas pensadas para usuarios reales de la web: un asistente tipo chatbot para las personas interesadas en el grado (responde preguntas frecuentes sobre el plan de estudios) y una calculadora de notas para los alumnos. Nos costó encontrar casos prácticos que encajaran con la página del grado, y estos dos fueron los que mejor aprovechaban los datos de la API.
+
+La revisión con agentes de IA fue útil: nos señaló un error grave (el asistente mostraba la pregunta en lugar de la respuesta), que corregimos gracias a la herramienta. Otros avisos de menor importancia los dejamos sin cambiar de forma deliberada, y los motivos están razonados en `AI/review-log.md`.
